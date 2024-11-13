@@ -13,7 +13,7 @@ func NewEventRepo(db *sql.DB) *EventRepoDB {
 	return &EventRepoDB{db}
 }
 
-func (d *EventRepoDB) GetEvent(page, limit int, date, sort string) (*[]model.Events, error) {
+func (d *EventRepoDB) GetEvent(page, limit int, date string) (*[]model.Events, error) {
 	offset := (page - 1) * limit
 
 	query := `
@@ -26,9 +26,9 @@ func (d *EventRepoDB) GetEvent(page, limit int, date, sort string) (*[]model.Eve
 		FROM events e
 		JOIN destinations d ON e.destination_id = d.id
 		WHERE e.deleted_at IS NULL AND ($1 = '' OR e.date = $1::date)
-		ORDER BY e.price ` + sort + `, e.id ASC
 		LIMIT $2 OFFSET $3;`
 
+	// Execute the query
 	rows, err := d.db.Query(query, date, limit, offset)
 	if err != nil {
 		return nil, err
@@ -46,4 +46,5 @@ func (d *EventRepoDB) GetEvent(page, limit int, date, sort string) (*[]model.Eve
 
 	return &events, nil
 }
+
 

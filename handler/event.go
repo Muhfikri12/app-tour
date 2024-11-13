@@ -29,7 +29,7 @@ func (eh *EventHandler) EventHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	
 
-	events, err := eh.service.GetEventData(page, sort, date)
+	events, err := eh.service.GetEvent(page, date, sort)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
