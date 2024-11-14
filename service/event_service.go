@@ -1,26 +1,36 @@
 package service
 
 import (
+	"math"
 	"sort"
 	"time"
 	"tour_destination/model"
 	"tour_destination/repository"
+
+	"go.uber.org/zap"
 )
 
 type EventService struct {
-	repo *repository.EventRepoDB
+	Repo *repository.EventRepoDB
+	
 }
 
-func NewEventService(repo *repository.EventRepoDB) *EventService {
-	return &EventService{repo}
+func NewEventService(Repo *repository.EventRepoDB) *EventService {
+	return &EventService{Repo}
 }
 
-func (s *EventService) GetEvent(page int, date, sortParam string) (*[]model.Events, error) {
-	limit := 10
+func (s *EventService) GetEvent(page int, date, sortParam string) (*[]model.Events, int, int, error) {
+	limit := 6
 
-	events, err := s.repo.GetEvent(page, limit, date)
+	
+	var totalData int
+
+	totalPage := int(math.Ceil(float64(totalData) / float64(limit)))
+
+	events, totalData, err := s.Repo.GetEvent(page, limit, date)
 	if err != nil {
-		return nil, err
+		s.Repo.Log.Error("event service: ", zap.Error(err))
+		return nil, 0, 0, err
 	}
 
 	today := time.Now().Format("2006-01-02")
@@ -43,5 +53,25 @@ func (s *EventService) GetEvent(page int, date, sortParam string) (*[]model.Even
 		})
 	}
 
-	return &filteredEvents, nil
+	return &filteredEvents, totalData, totalPage, nil
+}
+
+func (s *EventService) GetEventByID(id int) (*model.Events, error) {
+	events, err := s.Repo.GetEventByID(id)
+	if err != nil {
+		s.Repo.Log.Error("event service GetEventByID: ", zap.Error(err))
+		return nil, err
+	}
+
+	return events, nil
+}
+
+func (s *EventService) CreateBooking(trx *model.Transaction) error {
+	
+	if err := s.Repo.CreateTransaction(trx); err != nil {
+		s.Repo.Log.Error("event service CreateBooking: ", zap.Error(err))
+		return err
+	}
+
+	return nil
 }
