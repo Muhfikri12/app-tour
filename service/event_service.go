@@ -22,16 +22,16 @@ func NewEventService(Repo *repository.EventRepoDB) *EventService {
 func (s *EventService) GetEvent(page int, date, sortParam string) (*[]model.Events, int, int, error) {
 	limit := 6
 
-	
 	var totalData int
 
-	totalPage := int(math.Ceil(float64(totalData) / float64(limit)))
-
 	events, totalData, err := s.Repo.GetEvent(page, limit, date)
+
 	if err != nil {
 		s.Repo.Log.Error("event service: ", zap.Error(err))
 		return nil, 0, 0, err
 	}
+
+	totalPage := int(math.Ceil(float64(totalData) / float64(limit)))
 
 	today := time.Now().Format("2006-01-02")
 
@@ -53,6 +53,7 @@ func (s *EventService) GetEvent(page int, date, sortParam string) (*[]model.Even
 		})
 	}
 
+	
 	return &filteredEvents, totalData, totalPage, nil
 }
 
@@ -74,4 +75,24 @@ func (s *EventService) CreateBooking(trx *model.Transaction) error {
 	}
 
 	return nil
+}
+
+func (s *EventService) GetEventPlanById(id int) (*[]model.EventPlan, error) {
+	plans, err := s.Repo.GetEventPlanById(id)
+	if err != nil {
+		s.Repo.Log.Error("event service : ", zap.Error(err))
+		return nil, err
+	}
+
+	return plans, nil
+}
+
+func (s *EventService) GetLocationById(id int) (*[]model.Location, error) {
+	locations, err := s.Repo.GetEventLocationById(id)
+	if err != nil {
+		s.Repo.Log.Error("event service : ", zap.Error(err))
+		return nil, err
+	}
+
+	return locations, nil
 }

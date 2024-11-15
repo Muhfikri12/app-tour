@@ -1,1 +1,5 @@
-{"L":"INFO","T":"2024-11-14T21:33:03.075+0700","M":"http request","url":"/api/events/booking","duration":"1.874087ms"}
+{"L":"INFO","T":"2024-11-15T22:00:29.934+0700","M":"http request","url":"/api/events/2/plans","duration":"2.412827ms"}
+{"L":"ERROR","T":"2024-11-15T22:00:42.770+0700","M":"event repository GetPhotosByDestinationID: ","error":"sql: Scan error on column index 0, name \"first_plan\": converting NULL to string is unsupported"}
+{"L":"ERROR","T":"2024-11-15T22:00:42.770+0700","M":"event service : ","error":"sql: Scan error on column index 0, name \"first_plan\": converting NULL to string is unsupported"}
+{"L":"ERROR","T":"2024-11-15T22:00:42.770+0700","M":"event handler: ","error":"sql: Scan error on column index 0, name \"first_plan\": converting NULL to string is unsupported"}
+{"L":"INFO","T":"2024-11-15T22:00:42.770+0700","M":"http request","url":"/api/events/7/plans","duration":"890.049µs"}

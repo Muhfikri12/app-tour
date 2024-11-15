@@ -94,3 +94,53 @@ func (eh *EventHandler) CreateHandlerTransaction(w http.ResponseWriter, r *http.
 	
 	utils.Response(w, http.StatusCreated, "Successfully", trxs)
 }
+
+func (eh *EventHandler) EventPlans(w http.ResponseWriter, r *http.Request) {
+	idStr := chi.URLParam(r, "id")
+	if idStr == "" {
+		eh.service.Repo.Log.Error("event handler: id parameter missing")
+		utils.Response(w, http.StatusBadRequest, "id parameter is required", nil)
+		return
+	}
+	
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		eh.service.Repo.Log.Error("event handler: invalid id parameter", zap.Error(err))
+		utils.Response(w, http.StatusBadRequest, "invalid id parameter", nil)
+		return
+	}
+
+	plans, err := eh.service.GetEventPlanById(id)
+	if err != nil {
+		eh.service.Repo.Log.Error("event handler: ", zap.Error(err))
+		utils.Response(w, http.StatusNotFound, fmt.Sprintf("id dengan %d tidak tersedia", id), nil)
+		return
+	}
+
+	utils.Response(w, http.StatusOK, "Successfully Get Data", plans)
+}
+
+func (eh *EventHandler) EventLocations(w http.ResponseWriter, r *http.Request) {
+	idStr := chi.URLParam(r, "id")
+	if idStr == "" {
+		eh.service.Repo.Log.Error("event handler: id parameter missing")
+		utils.Response(w, http.StatusBadRequest, "id parameter is required", nil)
+		return
+	}
+	
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		eh.service.Repo.Log.Error("event handler: invalid id parameter", zap.Error(err))
+		utils.Response(w, http.StatusBadRequest, "invalid id parameter", nil)
+		return
+	}
+
+	locations, err := eh.service.GetLocationById(id)
+	if err != nil {
+		eh.service.Repo.Log.Error("event handler: ", zap.Error(err))
+		utils.Response(w, http.StatusNotFound, fmt.Sprintf("id dengan %d tidak tersedia", id), nil)
+		return
+	}
+
+	utils.Response(w, http.StatusOK, "Successfully Get Data", locations)
+}

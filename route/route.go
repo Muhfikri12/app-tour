@@ -40,6 +40,8 @@ func RouteInit() (*sql.DB, *chi.Mux, *zap.Logger) {
 			eventRoute.Get("/", eventHandler.EventHandler)      
 			eventRoute.Get("/{id}", eventHandler.EventHandlerByID) 
 			eventRoute.Post("/booking", eventHandler.CreateHandlerTransaction) 
+			eventRoute.Get("/{id}/plans", eventHandler.EventPlans)
+			eventRoute.Get("/{id}/location", eventHandler.EventLocations)
 		})
 	})
 

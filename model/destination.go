@@ -7,5 +7,12 @@ type Destination struct {
 	Description string `json:"description,omitempty"`
 	Image string `json:"image,omitempty"`
 	Photos *[]Image `json:"photos,omitempty"`
-	
+}
+
+type Location struct {
+	ID int `json:"id,omitempty"`
+	Destination *Destination `json:"destination,omitempty"`
+	Coordinate string `json:"coordinate,omitempty"`
+	FirstDescription string `json:"first_description,omitempty"`
+	SecondDescription string `json:"second_description,omitempty"`
 }
